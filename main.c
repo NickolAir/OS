@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#define BUF_SIZE 128
+
 char *strrev(char *S) {
     int i,j,l;
     char t;
@@ -56,6 +58,28 @@ void create_file(char *file_path, char *new_file_path, char *path, char *new_pat
     printf("%s\n", new_file_path);
 }
 
+long get_file_size(FILE *fin) {
+    fseek(fin, 0, 2);
+    return ftell(fin);
+}
+
+void copy(char *file_path, char *new_file_path) {
+    FILE *fin, *fout;
+    long file_size;
+    fin = fopen(file_path, "r");
+    fout = fopen(new_file_path, "w");
+    if (fin == NULL || fout == NULL) {
+        printf("Failed to open file\n");
+        exit(-1);
+    }
+    file_size = get_file_size(fin);
+
+    printf("%ld\n", file_size);
+
+    fclose(fin);
+    fclose(fout);
+}
+
 int main(int argc, char *argv[]) {
     DIR *dir, *new_dir;
     struct dirent *entry;
@@ -75,7 +99,6 @@ int main(int argc, char *argv[]) {
 
     name_len = get_length(path);
     rev_dir(path, new_path, name_len);
-    printf("%s\n", new_path);
     //mkdir(new_path, 0755);
 
     while ((entry = readdir(dir)) != NULL) {
@@ -88,6 +111,8 @@ int main(int argc, char *argv[]) {
 
             create_file(file_path, new_file_path, path, new_path, rev_file_name,
                         name_len, entry);
+
+            copy(file_path, new_file_path);
 
             printf("inode: %d, name: %s, type: [%d], length: %d\n",
                    entry->d_ino, entry->d_name, entry->d_type, entry->d_reclen);
