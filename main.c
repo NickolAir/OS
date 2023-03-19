@@ -66,6 +66,7 @@ long get_file_size(FILE *fin) {
 void copy(char *file_path, char *new_file_path) {
     FILE *fin, *fout;
     long file_size;
+    int buf_size;
     fin = fopen(file_path, "r");
     fout = fopen(new_file_path, "w");
     if (fin == NULL || fout == NULL) {
@@ -74,8 +75,20 @@ void copy(char *file_path, char *new_file_path) {
     }
     file_size = get_file_size(fin);
 
-    printf("%ld\n", file_size);
+    if (file_size < BUF_SIZE && file_size != 0){
+        buf_size = (int)file_size;
+    } else {
+        buf_size = BUF_SIZE;
+    }
+    char *buf = (char*) malloc(sizeof(char) * buf_size);
 
+    fseek(fin, -buf_size, SEEK_CUR);
+    fread(buf, sizeof(char), buf_size, fin);
+    buf = strrev(buf);
+    printf("buffer:\n");
+    puts(buf);
+
+    free(buf);
     fclose(fin);
     fclose(fout);
 }
