@@ -82,11 +82,23 @@ void copy(char *file_path, char *new_file_path) {
     }
     char *buf = (char*) malloc(sizeof(char) * buf_size);
 
-    fseek(fin, -buf_size, SEEK_CUR);
-    fread(buf, sizeof(char), buf_size, fin);
-    buf = strrev(buf);
-    printf("buffer:\n");
-    puts(buf);
+    int iterations = (int)file_size / buf_size;
+    int extra_chars = (int)file_size % buf_size;
+    for (int i = 0; i < iterations; ++i) {
+        fseek(fin, -buf_size * (i + 1), SEEK_CUR);
+        fread(buf, sizeof(char), buf_size, fin);
+        buf = strrev(buf);
+        fprintf(fout, "%s", buf);
+    }
+
+    if (extra_chars > 0){
+        free(buf);
+        buf = (char*) malloc(sizeof(char) * extra_chars);
+        fseek(fin, 0, SEEK_SET);
+        fread(buf, sizeof(char), extra_chars, fin);
+        buf = strrev(buf);
+        fprintf(fout, "%s", buf);
+    }
 
     free(buf);
     fclose(fin);
