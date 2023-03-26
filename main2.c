@@ -73,8 +73,25 @@ void remove_file(char *path) {
     remove(path);
 }
 
+
+
 int main(int argc, char *argv[]) {
     char *name = get_name(argv[0]);
+    if (argc > 0) {
+        if (strcmp(name, "make_dir")) {
+            make_dir(argv[1]);
+        } else if (strcmp(name, "print_dir")) {
+            print_dir(argv[1]);
+        } else if (strcmp(name, "remove_dir")) {
+            remove_dir(argv[1]);
+        } else if (strcmp(name, "create_file")) {
+            create_file(argv[1]);
+        } else if (strcmp(name, "print_file")) {
+            print_file(argv[1]);
+        } else if (strcmp(name, "remove_file")) {
+            remove_file(argv[1]);
+        }
+    }
     free(name);
     return 0;
 }
