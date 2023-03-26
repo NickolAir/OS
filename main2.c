@@ -119,12 +119,19 @@ void remove_hardlink(char *path) {
     }
 }
 
-void print_access() {
-
+void print_access(char *path) {
+    struct stat Stat;
+    stat(path, &Stat);
+    printf("Access mode: %u\n", Stat.st_mode);
+    printf("Hard links: %lu\n", Stat.st_nlink);
 }
 
-void change_access() {
-
+void change_access(char *path, char *mode_str) {
+    mode_t mode = strtol(mode_str, NULL, 8);
+    if (chmod(path, mode) == -1) {
+        perror("chmod");
+        exit(-1);
+    }
 }
 
 int main(int argc, char *argv[]) {
@@ -146,7 +153,7 @@ int main(int argc, char *argv[]) {
         } else if (strcmp(name, "create_slink") == 0) {
             create_slink(argv[1]);
         } else if (strcmp(name, "print_symlink") == 0) {
-            create_slink(argv[1]);
+            print_symlink(argv[1]);
         } else if (strcmp(name, "print_file_symlink") == 0) {
             print_file_symlink(argv[1]);
         } else if (strcmp(name, "remove_slink") == 0) {
@@ -155,6 +162,10 @@ int main(int argc, char *argv[]) {
             create_hardlink(argv[1]);
         } else if (strcmp(name, "remove_hardlink") == 0) {
             remove_hardlink(argv[1]);
+        } else if (strcmp(name, "print_access") == 0) {
+            print_access(argv[1]);
+        } else if (strcmp(name, "change_access") == 0) {
+            change_access(argv[1], argv[2]);
         }
     }
     free(name);
