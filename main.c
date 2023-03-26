@@ -8,6 +8,14 @@
 
 #define BUF_SIZE 128
 
+#define CHMOD 0755
+// 0/admin/users/others
+// 7 – read, write, execute
+// 6 – read and write
+// 5 – read and execute
+// 4 – read only
+// 0 – nothing
+
 char *strrev(char *S) {
     int i,j,l;
     char t;
@@ -27,7 +35,7 @@ char *strrev(char *S) {
 int get_length(char *path) {
     int count = 0;
     int i = strlen(path) - 1;
-    while(path[i] != '/') {
+    while (path[i] != '/') {
         count++;
         i--;
     }
@@ -106,7 +114,7 @@ void copy(char *file_path, char *new_file_path) {
 }
 
 int main(int argc, char *argv[]) {
-    DIR *dir, *new_dir;
+    DIR *dir;
     struct dirent *entry;
     char *path = argv[1];
     int name_len;
@@ -124,11 +132,11 @@ int main(int argc, char *argv[]) {
 
     name_len = get_length(path);
     rev_dir(path, new_path, name_len);
-    //mkdir(new_path, 0755);
+    mkdir(new_path, CHMOD);
 
     while ((entry = readdir(dir)) != NULL) {
         //regular files have type 8
-        if (entry->d_type == 8) {
+        if (entry->d_type == DT_REG) {
             name_len = strlen(entry->d_name);
             file_path = (char*) realloc(file_path, sizeof(char) * (strlen(path) + name_len + 1));
             new_file_path = (char*) realloc(new_file_path, sizeof(char) * (strlen(path) + name_len + 1));
