@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <dirent.h>
 #include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <string.h>
 
 char *get_name(char *path) {
@@ -30,7 +32,7 @@ void print_dir(char *path) {
     struct dirent *entry;
     dir = opendir(path);
     if (!dir) {
-        perror("diropen error");
+        perror("diropen");
         exit(1);
     }
 
@@ -73,23 +75,31 @@ void remove_file(char *path) {
     remove(path);
 }
 
-
+void create_slink(char *path) {
+    if (symlink(path, "/symlink") == -1) {
+        perror("symlink");
+        exit(-1);
+    }
+}
 
 int main(int argc, char *argv[]) {
     char *name = get_name(argv[0]);
+    printf("%s\n", name);
     if (argc > 0) {
-        if (strcmp(name, "make_dir")) {
+        if (strcmp(name, "make_dir") == 0) {
             make_dir(argv[1]);
-        } else if (strcmp(name, "print_dir")) {
+        } else if (strcmp(name, "print_dir") == 0) {
             print_dir(argv[1]);
-        } else if (strcmp(name, "remove_dir")) {
+        } else if (strcmp(name, "remove_dir") == 0) {
             remove_dir(argv[1]);
-        } else if (strcmp(name, "create_file")) {
+        } else if (strcmp(name, "create_file") == 0) {
             create_file(argv[1]);
-        } else if (strcmp(name, "print_file")) {
+        } else if (strcmp(name, "print_file") == 0) {
             print_file(argv[1]);
-        } else if (strcmp(name, "remove_file")) {
+        } else if (strcmp(name, "remove_file") == 0) {
             remove_file(argv[1]);
+        } else if (strcmp(name, "create_slink") == 0) {
+            create_slink(argv[1]);
         }
     }
     free(name);
