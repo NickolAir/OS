@@ -6,6 +6,8 @@
 #include <unistd.h>
 #include <string.h>
 
+#define STD_BUF 1024
+
 char *get_name(char *path) {
     int i = strlen(path);
     int count = 0;
@@ -76,10 +78,53 @@ void remove_file(char *path) {
 }
 
 void create_slink(char *path) {
-    if (symlink(path, "/symlink") == -1) {
+    if (symlink(path, "symlink") == -1) {
         perror("symlink");
         exit(-1);
     }
+}
+
+void print_symlink(char *path) {
+    char buf[BUFSIZ];
+    size_t len = readlink(path, buf, sizeof(buf) - 1);
+    if (len == -1) {
+        perror("readlink");
+        exit(-1);
+    }
+    printf("%s\n", buf);
+}
+
+void print_file_symlink(char *path) {
+    print_file(path);
+}
+
+void remove_slink(char *path) {
+    if (unlink(path) == -1) {
+        perror("unlink");
+        exit(-1);
+    }
+}
+
+void create_hardlink(char *path) {
+    if (link(path, "hardlink") == -1) {
+        perror("link");
+        exit(-1);
+    }
+}
+
+void remove_hardlink(char *path) {
+    if (unlink(path) == -1) {
+        perror("unlink");
+        exit(-1);
+    }
+}
+
+void print_access() {
+
+}
+
+void change_access() {
+
 }
 
 int main(int argc, char *argv[]) {
@@ -100,6 +145,16 @@ int main(int argc, char *argv[]) {
             remove_file(argv[1]);
         } else if (strcmp(name, "create_slink") == 0) {
             create_slink(argv[1]);
+        } else if (strcmp(name, "print_symlink") == 0) {
+            create_slink(argv[1]);
+        } else if (strcmp(name, "print_file_symlink") == 0) {
+            print_file_symlink(argv[1]);
+        } else if (strcmp(name, "remove_slink") == 0) {
+            remove_slink(argv[1]);
+        } else if (strcmp(name, "create_hardlink") == 0) {
+            create_hardlink(argv[1]);
+        } else if (strcmp(name, "remove_hardlink") == 0) {
+            remove_hardlink(argv[1]);
         }
     }
     free(name);
