@@ -3,4 +3,4 @@ project(project3 C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(project3 main2.c)
+add_executable(project3 FileSystems/main3.c FileSystems/proc_pagemap.c)
