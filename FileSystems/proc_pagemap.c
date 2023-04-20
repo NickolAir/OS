@@ -44,7 +44,7 @@ void print_file_content(char *path) {
             perror("pread");
             break;
         }
-        printf("pfn %-16lx soft-dirty %ld file/shared %ld "
+        printf("pfn %-16lx soft-dirty %ld file-page or shared %ld "
                "swapped %ld present %ld\n",
                data & PFN_MASK,
                (data >> SOFT_DIRTY_BIT) & 1,
