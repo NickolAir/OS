@@ -137,6 +137,7 @@ void change_access(char *path, char *mode_str) {
 int main(int argc, char *argv[]) {
     char *name = get_name(argv[0]);
     printf("%s\n", name);
+    printf("%s\n", name);
     if (argc > 0) {
         if (strcmp(name, "make_dir") == 0) {
             make_dir(argv[1]);
