@@ -33,11 +33,11 @@ void print_file_content(char *path) {
         exit(-1);
     }
 
-    printf("Enter number of pages: ");
-    int pages;
-    scanf("%d", &pages);
+    printf("Enter number of frames (8 byte) : ");
+    int frames;
+    scanf("%d", &frames);
 
-    for (int i = 0; i < pages; i++) {
+    for (int i = 0; i < frames; i++) {
         uint64_t data;
         uint64_t index = i * sizeof(data);
         if (pread(fd, &data, sizeof(data), index) != sizeof(data)) {
@@ -51,13 +51,13 @@ void print_file_content(char *path) {
                (data >> FILE_SHARED_BIT) & 1,
                (data >> PAGE_SWAP_BIT) & 1,
                (data >> PAGE_PRESENT_BIT) & 1);
-        usleep(10000);
+        usleep(1000);
     }
     close(fd);
 }
 
 int main() {
-    int pid = 2938;
+    int pid = 2802;
     char pid_str[20];
     sprintf(pid_str, "%d", pid);
     printf("pid = %s\n", pid_str);
