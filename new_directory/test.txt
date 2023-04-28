@@ -1,3 +1,0 @@
-dir: new_directory
-filename: test.txt
-text: qwerty
