@@ -15,12 +15,14 @@ void mem_allocate_stack() {
 }
 
 void mem_allocate_heap() {
-    char *array;
-    for (int i = 0; i < 15; ++i) {
-        array = (char*) malloc(SIZE * sizeof(char));
+    int *array[30];
+    for (int i = 0; i < 30; ++i) {
+        array[i] = (int*) malloc(SIZE * sizeof(int));
         sleep(1);
     }
-    free(array);
+    for (int i = 0; i < 30; ++i) {
+        free(array[i]);
+    }
 }
 
 void sigsegv_handler() {
